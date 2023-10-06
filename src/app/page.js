@@ -1,95 +1,49 @@
+"use client"
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import styles from './page.module.css'
+import { Container, Grid, Paper } from '@mui/material'
+import CreateNote from '@/components/notes/CreateNote'
+
 
 export default function Home() {
+ 
+  const [notes, setNotes] = useState([])
+  useEffect(() =>{
+    fetch('http://localhost:8000/notes')
+    .then((res) =>res.json())
+    .then(data =>setNotes(data));
+  }, []);
+//delete an item from the json server 
+
+const handleDelete = async (id) => {
+  await fetch('http://localhost:8000/notes/' + id, {
+    method: 'DELETE'
+  })
+  const newNotes = notes.filter(note => note.id != id)
+  setNotes(newNotes)
+}
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+      <Container style={{margin: '40px auto'}}>
+        <Grid container spacing={3}>
+          {
+            notes.map((note, index) =>(
+              <Grid item sm={12} md={4} key={index}
+                style={{
+                  padding: '30px', 
+                  backgroundColor: 'lightgrey', 
+                  margin: '20px ',
+                  border: '1px solid red'
+                }}
+              >
+                <h4  >{note.title} </h4>
+                <button type="button" onClick={handleDelete}>delete</button>
+              </Grid>
+            ))
+          }
+        </Grid>
+        <hr/>
+        <CreateNote/>
+      </Container>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
   )
 }
