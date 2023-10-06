@@ -16,7 +16,7 @@ export default function Home() {
 //delete an item from the json server 
 
 const handleDelete = async (id) => {
-  await fetch('http://localhost:8000/notes/' + id, {
+  await fetch(`http://localhost:8000/notes/${id}`, {
     method: 'DELETE'
   })
   const newNotes = notes.filter(note => note.id != id)
@@ -26,8 +26,8 @@ const handleDelete = async (id) => {
       <Container style={{margin: '40px auto'}}>
         <Grid container spacing={3}>
           {
-            notes.map((note, index) =>(
-              <Grid item sm={12} md={4} key={index}
+            notes.map((note, id) =>(
+              <Grid item sm={12} md={4} key={id}
                 style={{
                   padding: '30px', 
                   backgroundColor: 'lightgrey', 
