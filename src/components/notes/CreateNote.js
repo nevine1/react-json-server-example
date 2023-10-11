@@ -23,7 +23,7 @@ const CreateNote = () => {
         if(title && details){
             fetch('http://localhost:8000/notes', {
             method: 'POST', 
-            headers: { "content-type": "application/json"}, 
+            headers: { "content-type" - "application/json"}, 
             body: JSON.stringify({title, details, category})
             }).then(()=>router.push('/'))
     } 
